@@ -85,8 +85,9 @@ class COCO:
             dataset = json.load(open(annotation_file, 'r'))
             print('Done (t=%0.2fs)'%(time.time()- tic))
             self.dataset = dataset
+            self.dataset['annotations'] = [x for x in self.dataset['annotations'] if x['category_id'] not in [0,11]]
             self.createIndex()
-
+           
     def createIndex(self):
         # create index
         print('creating index...')
