@@ -87,7 +87,7 @@ class coco(imdb):
     """
     Return the absolute path to image i in the image sequence.
     """
-    return self.image_path_from_index(self._image_index[i])
+    return self._COCO.image_path_by_id(i)
 
   def image_id_at(self, i):
     """
@@ -193,10 +193,14 @@ class coco(imdb):
   def append_flipped_images(self):
     num_images = self.num_images
     widths = self._get_widths()
+    print(self.roidb)
     for i in range(num_images):
       boxes = self.roidb[i]['boxes'].copy()
       oldx1 = boxes[:, 0].copy()
       oldx2 = boxes[:, 2].copy()
+      print(num_images)
+      print(len(widths))
+      print(len(self.roidb))
       boxes[:, 0] = widths[i] - oldx2 - 1
       boxes[:, 2] = widths[i] - oldx1 - 1
       assert (boxes[:, 2] >= boxes[:, 0]).all()

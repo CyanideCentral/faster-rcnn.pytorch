@@ -356,3 +356,6 @@ class COCO:
             if not os.path.exists(fname):
                 urllib.urlretrieve(img['coco_url'], fname)
             print('downloaded %d/%d images (t=%.1fs)'%(i, N, time.time()- tic))
+
+    def image_path_by_id( self, id):
+        return '/home/magus/dataset/VisDrone-Dataset/2-Object-Detection-in-Videos/VisDrone2018-VID-train/coco/images/'+self.dataset['images'][id]['file_name']
