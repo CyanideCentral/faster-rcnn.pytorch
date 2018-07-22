@@ -27,6 +27,7 @@ from pycocotools import mask as COCOmask
 class coco(imdb):
   def __init__(self, image_set, year):
     imdb.__init__(self, 'coco_' + year + '_' + image_set)
+    print(self._roidb)
     # COCO specific config options
     self.config = {'use_salt': True,
                    'cleanup': True}
@@ -39,11 +40,16 @@ class coco(imdb):
     cats = self._COCO.loadCats(self._COCO.getCatIds())
     self._classes = tuple(['__background__'] + [c['name'] for c in cats])
     self._class_to_ind = dict(list(zip(self.classes, list(range(self.num_classes)))))
+    print(self._roidb)
     self._class_to_coco_cat_id = dict(list(zip([c['name'] for c in cats],
                                                self._COCO.getCatIds())))
+    print(self._roidb)
     self._image_index = self._load_image_set_index()
     # Default to roidb handler
+    print(self._roidb)
     self.set_proposal_method('gt')
+    print(len(self.roidb))
+    #print(self.roidb)
     self.competition_mode(False)
 
     # Some image sets are "views" (i.e. subsets) into others.
@@ -64,6 +70,7 @@ class coco(imdb):
     # Dataset splits that have ground-truth annotations (test splits
     # do not have gt annotations)
     self._gt_splits = ('train', 'val', 'minival')
+    
 
   def _get_ann_file(self):
     prefix = 'instances' if self._image_set.find('test') == -1 \
@@ -87,7 +94,7 @@ class coco(imdb):
     """
     Return the absolute path to image i in the image sequence.
     """
-    return self._COCO.image_path_by_id(i)
+    return self._COCO.image_path_by_id(self._image_index[i])
 
   def image_id_at(self, i):
     """
@@ -193,14 +200,11 @@ class coco(imdb):
   def append_flipped_images(self):
     num_images = self.num_images
     widths = self._get_widths()
-    print(self.roidb)
+    #print(self.roidb)
     for i in range(num_images):
       boxes = self.roidb[i]['boxes'].copy()
       oldx1 = boxes[:, 0].copy()
       oldx2 = boxes[:, 2].copy()
-      print(num_images)
-      print(len(widths))
-      print(len(self.roidb))
       boxes[:, 0] = widths[i] - oldx2 - 1
       boxes[:, 2] = widths[i] - oldx1 - 1
       assert (boxes[:, 2] >= boxes[:, 0]).all()

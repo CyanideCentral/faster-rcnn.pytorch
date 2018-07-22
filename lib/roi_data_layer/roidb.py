@@ -107,6 +107,8 @@ def combined_roidb(imdb_names, training=True):
   
   def get_roidb(imdb_name):
     imdb = get_imdb(imdb_name)
+    #print(imdb.roidb)
+    print(len(imdb.roidb))
     print('Loaded dataset `{:s}` for training'.format(imdb.name))
     imdb.set_proposal_method(cfg.TRAIN.PROPOSAL_METHOD)
     print('Set proposal method: {:s}'.format(cfg.TRAIN.PROPOSAL_METHOD))
@@ -128,5 +130,4 @@ def combined_roidb(imdb_names, training=True):
     roidb = filter_roidb(roidb)
 
   ratio_list, ratio_index = rank_roidb_ratio(roidb)
-
   return imdb, roidb, ratio_list, ratio_index
